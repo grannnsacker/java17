@@ -16,15 +16,29 @@ public class GroupControllers {
 
     @GetMapping("/get_group_by_name")
     @ResponseBody
-    public String getGroupByName(@RequestParam String name){
-        return groupRepository.getGroupByName(name).toString();
+    public Group getGroupByName(@RequestParam String name){
+        return groupRepository.getGroupByName(name);
     }
+
+    @GetMapping("/get_group_by_id")
+    @ResponseBody
+    public Group getGroupByName(@RequestParam Long id){
+        return groupRepository.getGroupById(id);
+    }
+
 
     @GetMapping("/delete_group_by_name")
     @ResponseBody
     public String deleteGroupByName(@RequestParam String name){
         groupRepository.deleteGroupByName(name);
-        return  name + " was successfully deleted";
+        return "Success";
+    }
+
+    @GetMapping("/delete_group_by_id")
+    @ResponseBody
+    public String deleteGroupByName(@RequestParam Long id){
+        groupRepository.deleteGroupById(id);
+        return "Success";
     }
 
     @PostMapping("/post_group")

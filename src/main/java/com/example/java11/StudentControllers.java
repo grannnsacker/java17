@@ -19,17 +19,36 @@ public class StudentControllers {
         return "index.html";
     }
 
-    @GetMapping("/get_student_by_first_name")
+    @GetMapping("/get_student_by_id")
     @ResponseBody
-    public String getStudentByFistName(@RequestParam String name){
-        return studentRepository.getStudentByFirstName(name).toString();
+    public Student getStudentById(@RequestParam Long id){
+        return studentRepository.getStudentById(id);
     }
 
-    @GetMapping("/delete_student_by_first_name")
+
+    @GetMapping("/get_student_by_first_name")
     @ResponseBody
-    public String deleteStudentByFirstName(@RequestParam String firstName){
-        studentRepository.deleteStudentByFirstName(firstName);
-        return "Student with " + firstName + " was successfully deleted";
+    public Student getStudentByFirstName(@RequestParam String name){
+        return studentRepository.getStudentByName(name, StudentRepository.NameCode.FirstName);
+    }
+
+    @GetMapping("/get_student_by_middle_name")
+    @ResponseBody
+    public Student getStudentByMiddleName(@RequestParam String name){
+        return studentRepository.getStudentByName(name, StudentRepository.NameCode.MiddleName);
+    }
+
+    @GetMapping("/get_student_by_last_name")
+    @ResponseBody
+    public Student getStudentByLastName(@RequestParam String name){
+        return studentRepository.getStudentByName(name, StudentRepository.NameCode.LastName);
+    }
+
+    @GetMapping("/delete_student_by_id")
+    @ResponseBody
+    public String deleteStudentByFirstName(@RequestParam Long id){
+        studentRepository.deleteStudentById(id);
+        return "Success";
     }
 
     @PostMapping("/post_student")

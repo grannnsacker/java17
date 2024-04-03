@@ -4,9 +4,15 @@ package com.example.java11;
 import com.example.java11.entity.Group;
 import com.example.java11.entity.Student;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -34,19 +40,56 @@ public class GroupRepository {
     }
 
     public Group getGroupByName(String name){
-        return session.createQuery("select s from Group s where s.groupName = %s".formatted(name), Group.class).getSingleResult();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Group> groupCriteriaQuery = builder.createQuery(Group.class);
+        Root<Group> root = groupCriteriaQuery.from(Group.class);
+        groupCriteriaQuery.select(root);
+        groupCriteriaQuery.where(builder.equal(root.get("groupName"), name));
+        Query<Group> query = session.createQuery(groupCriteriaQuery);
+        return query.getSingleResultOrNull();
     }
 
     public Group getGroupById(Long id){
-        return session.createQuery("select s from Group s where s.id = %d".formatted(id), Group.class).getSingleResult();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Group> groupCriteriaQuery = builder.createQuery(Group.class);
+        Root<Group> root = groupCriteriaQuery.from(Group.class);
+        groupCriteriaQuery.select(root);
+        groupCriteriaQuery.where(builder.equal(root.get("id"), id));
+        Query<Group> query = session.createQuery(groupCriteriaQuery);
+        return query.getSingleResultOrNull();
+    }
+
+    public void deleteGroupById(Long id){
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+
+        CriteriaDelete<Group> criteriaDelete = builder.createCriteriaDelete(Group.class);
+        Root<Group> root = criteriaDelete.from(Group.class);
+        criteriaDelete.where(builder.equal(root.get("id"), id));
+
+        Transaction transaction = session.beginTransaction();
+        session.createQuery(criteriaDelete).executeUpdate();
+        transaction.commit();
     }
 
     public void deleteGroupByName(String name){
-        session.createQuery("delete from Group s where s.groupName = %s".formatted(name), Group.class).getSingleResult();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+
+        CriteriaDelete<Group> criteriaDelete = builder.createCriteriaDelete(Group.class);
+        Root<Group> root = criteriaDelete.from(Group.class);
+        criteriaDelete.where(builder.equal(root.get("groupName"), name));
+
+        Transaction transaction = session.beginTransaction();
+        session.createQuery(criteriaDelete).executeUpdate();
+        transaction.commit();
     }
 
     public List<Group> getAllGroups(){
-        return session.createQuery("select s from Group s", Group.class).getResultList();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Group> groupCriteriaQuery = builder.createQuery(Group.class);
+        Root<Group> root = groupCriteriaQuery.from(Group.class);
+        groupCriteriaQuery.select(root);
+        Query<Group> query = session.createQuery(groupCriteriaQuery);
+        return query.getResultList();
     }
 }
 
