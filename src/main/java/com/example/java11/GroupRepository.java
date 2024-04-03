@@ -37,6 +37,10 @@ public class GroupRepository {
         return session.createQuery("select s from Group s where s.groupName = %s".formatted(name), Group.class).getSingleResult();
     }
 
+    public Group getGroupById(Long id){
+        return session.createQuery("select s from Group s where s.id = %d".formatted(id), Group.class).getSingleResult();
+    }
+
     public void deleteGroupByName(String name){
         session.createQuery("delete from Group s where s.groupName = %s".formatted(name), Group.class).getSingleResult();
     }

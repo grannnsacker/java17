@@ -1,7 +1,9 @@
 package com.example.java11;
 
 
+import com.example.java11.entity.Group;
 import com.example.java11.entity.Student;
+import com.example.java11.reqmodels.ReqStudent;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -22,13 +24,18 @@ public class StudentRepository {
     private final SessionFactory sessionFactory;
     private Session session;
 
+    @Autowired
+    private GroupRepository groupRepository;
+
     @PostConstruct
     void init() {
         session = sessionFactory.openSession();
     }
 
 
-    public void addStudent(Student student){
+    public void addStudent(ReqStudent reqStudent){
+        Group group = groupRepository.getGroupById(reqStudent.getGroupId());
+        Student student = Student.mapStudent(reqStudent, group);
         session.beginTransaction();
         session.persist(student);
         session.flush();

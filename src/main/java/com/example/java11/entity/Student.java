@@ -1,6 +1,7 @@
 package com.example.java11.entity;
 
 
+import com.example.java11.reqmodels.ReqStudent;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,4 +23,16 @@ public class Student {
     private String middleName;
     @Column(name = "last_name")
     private String lastName;
+
+    @ManyToOne
+    private Group group;
+
+    static public Student mapStudent(ReqStudent reqStudent, Group group){
+        Student student = new Student();
+        student.setLastName(reqStudent.getLastName());
+        student.setFirstName(reqStudent.getFirstName());
+        student.setMiddleName(reqStudent.getMiddleName());
+        student.setGroup(group);
+        return student;
+    }
 }
