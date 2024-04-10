@@ -4,3 +4,9 @@ program:
     last_name: Alexandridi-Shandaevksiy
     middle_name: Dmitrievich
     group: IKBO-20-22
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/java18;
+    username: postgres
+    password: password;
